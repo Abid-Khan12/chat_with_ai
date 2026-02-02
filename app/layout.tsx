@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
+import { Header } from "@/components/navbar/header";
+import NextAuthProvider from "@/providers/nextauth-provider";
+import { AppContextProvider } from "@/context/app-context";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,9 +31,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
-        {children}
+        <NextAuthProvider>
+          <AppContextProvider>
+            {children}
+          </AppContextProvider>
+        </NextAuthProvider>
+        <Toaster
+          duration={2000}
+          position="top-right"
+          expand={false}
+          closeButton
+        />
       </body>
     </html>
   );

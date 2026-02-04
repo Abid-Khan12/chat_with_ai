@@ -79,7 +79,7 @@ export function MobileNav() {
                 {userData ? (
                   <Button
                     nativeButton={false}
-                    render={<Link href={"/conversation"}>Get started</Link>}
+                    render={<Link href={"/chat"}>Get started</Link>}
                     onClick={() => setOpen(false)}
                   />
                 ) : (

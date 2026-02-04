@@ -27,5 +27,7 @@ export const conversationTitleSchema = z.object({
   title: z
     .string()
     .min(1, "Title is required")
-    .max(100, "Maximum 100 characters"),
+    .max(80, "Maximum 80 characters"),
 });
+
+export type conversationTitleFormData = z.infer<typeof conversationTitleSchema>;

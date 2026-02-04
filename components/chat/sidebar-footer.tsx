@@ -104,7 +104,10 @@ export function NavUser({
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => signOut()}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

@@ -1,113 +1,117 @@
 "use client";
 
+import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { useState } from "react";
-
-interface MutationProps {
-  api_url: string;
-  method?: "post" | "delete" | "put";
-}
 
 interface ValidationErrors {
   [key: string]: string[];
 }
 
-interface MutationResponse {
-  data?: any;
+interface MutationResponse<T = any> {
+  data?: T;
   message?: string;
   status?: number;
-  isError?: boolean;
+}
+
+interface ErrorResponse<TError> {
+  message?: string;
+  status?: number;
   validationErrors?: ValidationErrors;
+  data?: TError;
 }
 
-interface MutationResult<TPayload> {
-  mutate: (payload: TPayload) => Promise<MutationResponse>;
-  isLoading: boolean;
+interface CustomMutationProps {
+  api_url: string;
+  api_key: string[];
 }
 
-const useMutation = <TPayload = any,>({
+interface PostProps<T> {
+  api_url: string;
+  api_key: string[];
+  payload: T;
+}
+
+interface MutationVariables<TPayload> {
+  payload: TPayload;
+  method?: "post" | "delete" | "put";
+  slug?: string;
+}
+
+const handlePost = async <TPayload, TResponse, TError>({
   api_url,
-  method = "post",
-}: MutationProps): MutationResult<TPayload> => {
-  const [isLoading, setIsLoading] = useState(false);
+  api_key,
+  payload,
+}: PostProps<TPayload>): Promise<MutationResponse<TResponse>> => {
+  try {
+    const { data } = await axios.post(api_url, payload);
 
-  const mutate = async (payload: TPayload): Promise<MutationResponse> => {
-    setIsLoading(true);
+    console.log(`${api_key.join()} response data`, data);
 
-    switch (method) {
-      // case "delete":
-      //   try {
-      //     const { data } = await axios.delete(api_url);
-      //     setResponse(data);
-      //   } catch (err) {
-      //     setError(err instanceof Error ? err.message : "An error occurred");
-      //   } finally {
-      //     setIsLoading(false);
-      //   }
-      //   break;
+    return {
+      data: data,
+      message: data.message,
+      status: data.status,
+    };
+  } catch (err) {
+    const error = err as AxiosError<{
+      message?: string;
+      status?: number;
+      error?: ValidationErrors;
+      data?: TError;
+    }>;
 
-      // case "put":
-      //   try {
-      //     const { data } = await axios.put(api_url, { payload });
+    console.error(`${api_url} Error`, error);
 
-      //     setResponse(data);
-      //   } catch (err) {
-      //     setError(err instanceof Error ? err.message : "An error occurred");
-      //   } finally {
-      //     setIsLoading(false);
-      //   }
-      //   break;
-
-      default:
-        try {
-          const { data } = await axios.post(api_url, payload);
-
-          console.log("response data", data);
-
-          return {
-            data: data,
-            message: data.message,
-            status: data.status,
-            isError: false,
-          };
-        } catch (err) {
-          const error = err as AxiosError<{
-            message?: string;
-            status?: number;
-            error?: ValidationErrors;
-          }>;
-
-          console.error(`${api_url} Error`, error);
-
-          if (
-            error.response?.data?.message === "Validation error" &&
-            error.response?.data?.error
-          ) {
-            return {
-              data: undefined,
-              message: error.response?.data?.message,
-              status: error.response?.data?.status,
-              validationErrors: error.response.data.error,
-              isError: true,
-            };
-          }
-
-          return {
-            data: undefined,
-            message: error.response?.data?.message,
-            status: error.response?.data?.status,
-            isError: true,
-          };
-        } finally {
-          setIsLoading(false);
-        }
+    if (
+      error.response?.data?.message === "Validation error" &&
+      error.response?.data?.error
+    ) {
+      throw {
+        message: error.response?.data?.message,
+        status: error.response?.data?.status,
+        validationErrors: error.response.data.error,
+      };
     }
-  };
 
-  return {
-    mutate,
-    isLoading,
-  };
+    throw {
+      message: error.response?.data?.message,
+      status: error.response?.data?.status,
+      data: error.response?.data,
+    };
+  }
 };
 
-export default useMutation;
+const useCustomMutation = <TResponse = any, TPayload = any, TError = any>({
+  api_url,
+  api_key,
+}: CustomMutationProps): UseMutationResult<
+  MutationResponse<TResponse>,
+  ErrorResponse<TError>,
+  MutationVariables<TPayload>
+> => {
+  return useMutation<
+    MutationResponse<TResponse>,
+    ErrorResponse<TError>,
+    MutationVariables<TPayload>
+  >({
+    mutationKey: api_key,
+    mutationFn: ({ payload, method = "post", slug }) => {
+      switch (method) {
+        // case "delete":
+        //   return handleDelete<TResponse>(api_url, api_key, slug);
+
+        // case "put":
+        //   return handlePut<TPayload, TResponse>(api_url, api_key, payload, slug);
+
+        default:
+          return handlePost<TPayload, TResponse, TError>({
+            api_key,
+            api_url,
+            payload,
+          });
+      }
+    },
+  });
+};
+
+export default useCustomMutation;

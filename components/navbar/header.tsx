@@ -20,10 +20,10 @@ import {
   CreditCardIcon,
   LogOutIcon,
 } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 import Link from "next/link";
 import useAppContext from "@/context/app-context";
-import { Skeleton } from "../ui/skeleton";
 
 export const navLinks = [
   {
@@ -51,7 +51,7 @@ export function Header() {
           scrolled,
       })}
     >
-      <nav className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-2">
+      <nav className="flex h-14 w-full items-center justify-between">
         <Link
           href={"/"}
           className="rounded-md p-2 hover:bg-accent cursor-pointer"
@@ -146,7 +146,7 @@ export const UserAvatar = ({
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
           <LogOutIcon />
-          Sign Out
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

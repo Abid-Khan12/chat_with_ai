@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    await UserModel.create(parsedData);
+    const newUser = await UserModel.create(parsedData);
 
     return NextResponse.json(
       { status: 201, message: "Sign up successfully" },

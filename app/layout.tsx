@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/components/navbar/header";
 import NextAuthProvider from "@/providers/nextauth-provider";
 import { AppContextProvider } from "@/context/app-context";
+import ReactQueryProvider from "@/providers/query-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -29,13 +30,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
         <NextAuthProvider>
           <AppContextProvider>
-            {children}
+            <ReactQueryProvider>{children}</ReactQueryProvider>
           </AppContextProvider>
         </NextAuthProvider>
         <Toaster

@@ -12,19 +12,20 @@ import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpFormData, signUpSchema } from "@/schemas/schema";
-
-import Link from "next/link";
-import InputField from "../inputs/input-field";
-import PasswordField from "../inputs/password-field";
-import useMutation from "@/hooks/use-mutation";
 import { Loader } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
+import Link from "next/link";
+import InputField from "../inputs/input-field";
+import PasswordField from "../inputs/password-field";
+import useCustomMutation from "@/hooks/use-mutation";
+
 const SignupForm = () => {
   const router = useRouter();
-  const { isLoading, mutate } = useMutation<SignUpFormData>({
+  const { mutate, isPending } = useCustomMutation<{}, SignUpFormData>({
+    api_key: ["signup_mutation"],
     api_url: "/api/auth/sign-up",
   });
   const { control, reset, handleSubmit } = useForm<SignUpFormData>({
@@ -38,19 +39,27 @@ const SignupForm = () => {
   });
 
   const onSubmit = async (values: SignUpFormData) => {
-    const { isError, message, validationErrors } = await mutate(values);
+    mutate(
+      { payload: { ...values } },
+      {
+        onSuccess: ({ message }) => {
+          toast.success(message);
+          router.replace("/auth/login");
+          reset();
+        },
+        onError: ({ message, validationErrors }) => {
+          if (validationErrors) {
+            Object.entries(validationErrors).forEach(([field, errors]) => {
+              toast.error(`${field}: ${errors[0]}`);
+            });
+            return;
+          }
 
-    if (isError && validationErrors) {
-      Object.entries(validationErrors).forEach(([field, errors]) => {
-        toast.error(`${field}: ${errors[0]}`);
-      });
-      return;
-    }
-
-    toast.success(message);
-
-    reset();
-    router.replace("/auth/login");
+          toast.error(message);
+          return;
+        },
+      },
+    );
   };
 
   return (
@@ -85,13 +94,14 @@ const SignupForm = () => {
               maxLength={30}
             />
             <Field className="mt-2 space-y-2">
-              <Button disabled={isLoading} type="submit">
-                {isLoading && <Loader className="animate-spin" />}
+              <Button disabled={isPending} type="submit">
+                {isPending && <Loader className="animate-spin" />}
                 Create Account
               </Button>
               <Button
                 variant="outline"
                 type="button"
+                disabled={isPending}
                 onClick={() => signIn("google")}
               >
                 Sign up with Google

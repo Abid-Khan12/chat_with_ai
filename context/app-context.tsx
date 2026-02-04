@@ -3,11 +3,13 @@
 import { PrimaryChildrenProp } from "@/types/types";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface IAppContext {
   status: "loading" | "authenticated" | "unauthenticated";
   userData: Session["user"] | null;
+  resetAt: Date | null;
+  setResetAt: (val: Date | null) => void;
 }
 
 const AppContext = createContext<IAppContext | null>(null);
@@ -15,8 +17,23 @@ const AppContext = createContext<IAppContext | null>(null);
 export const AppContextProvider = ({ children }: PrimaryChildrenProp) => {
   const { data, status } = useSession();
   const userData = data?.user ?? null;
+  const [resetAt, setResetAt] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const result = localStorage.getItem("resetAt");
+
+    if (!result) {
+      setResetAt(null);
+      return;
+    }
+
+    const parsed = JSON.parse(result);
+
+    setResetAt(parsed);
+  }, []);
+
   return (
-    <AppContext.Provider value={{ userData, status }}>
+    <AppContext.Provider value={{ userData, status, resetAt, setResetAt }}>
       {children}
     </AppContext.Provider>
   );

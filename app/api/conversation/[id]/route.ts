@@ -4,7 +4,10 @@ import ConversationModel, { TConversation } from "@/models/conversation.model";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user) {
@@ -13,8 +16,7 @@ export async function GET(req: NextRequest) {
       { status: 401 },
     );
   }
-  const { searchParams } = new URL(req.url);
-  const conversationId = searchParams.get("id");
+  const { id: conversationId } = await params;
 
   if (!conversationId) {
     return NextResponse.json(

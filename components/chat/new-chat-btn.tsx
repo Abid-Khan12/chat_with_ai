@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "../ui/sidebar";
 import { SquarePen } from "lucide-react";
 import {
   Dialog,
@@ -61,6 +66,7 @@ const getResetTime = (resetAt: Date) => {
 const NewChatButton = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { toggleSidebar, isMobile } = useSidebar();
   const { resetAt, setResetAt } = useAppContext();
   const [showModal, setShowModal] = useState(false);
 
@@ -96,6 +102,10 @@ const NewChatButton = () => {
             queryKey: ["user_chats_fetch"],
           });
 
+          if (isMobile) {
+            toggleSidebar();
+          }
+
           router.replace(`/chat/${data?.data.conversation.id}`);
         },
         onError: ({ validationErrors, message, data }) => {
@@ -111,6 +121,9 @@ const NewChatButton = () => {
             setResetAt(data.data.resetAt);
             setShowModal(false);
             reset();
+            if (isMobile) {
+              toggleSidebar();
+            }
           }
 
           toast.error(message, { duration: 2000 });

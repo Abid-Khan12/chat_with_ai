@@ -7,13 +7,11 @@ const ChatLayout = ({ children }: PrimaryChildrenProp) => {
     <SidebarProvider>
       <ChatSidebar />
 
-      <main className="h-screen w-full flex flex-col md:gap-0 gap-3 relative">
-        <div className="border-b py-2 md:hidden bg-background absolute top-0 w-full px-4 z-50">
+      <main className="w-full h-screen md:pt-0 pt-10">
+        <div className="border-b py-2 md:hidden bg-background fixed top-0 w-full px-4 z-50">
           <SidebarTrigger />
         </div>
-        <div className="h-full max-w-5xl lg:px-7 px-4 py-2 mx-auto w-full md:pt-4 pt-11.5">
-          {children}
-        </div>
+        <div className="h-full w-full py-2">{children}</div>
       </main>
     </SidebarProvider>
   );

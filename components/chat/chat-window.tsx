@@ -133,23 +133,23 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
   };
 
   return (
-    <div className="h-full w-full relative">
+    <div className="h-full w-full relative max-w-4xl mx-auto lg:px-7 px-3">
       <div className="h-full">
         <ScrollArea className={`h-[80%]`}>
           <Conversation>
-            <ConversationContent className="px-0!">
+            <ConversationContent>
               {isLoading ? (
                 <div className="space-y-6">
                   {/* user */}
                   <div className="flex items-start gap-3 justify-end">
                     <div className="max-w-[70%] w-full flex justify-end">
-                      <Skeleton className="h-6 w-60" />
+                      <Skeleton className="h-6 min-w-60" />
                     </div>
                   </div>
                   {/* assistant */}
                   <div className="flex items-start gap-3">
                     <div className="max-w-[70%] w-full">
-                      <Skeleton className="h-20 w-100" />
+                      <Skeleton className="h-20 min-w-100" />
                     </div>
                   </div>
                 </div>
@@ -192,7 +192,7 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
           </Conversation>
         </ScrollArea>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <div className="absolute bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60 lg:px-7 px-3">
         <PromptInput onSubmit={handleSubmit} multiple>
           <PromptInputBody>
             <PromptInputTextarea
@@ -207,7 +207,6 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
         </PromptInput>
       </div>
     </div>
-    
   );
 };
 

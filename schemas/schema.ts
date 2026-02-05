@@ -31,3 +31,10 @@ export const conversationTitleSchema = z.object({
 });
 
 export type conversationTitleFormData = z.infer<typeof conversationTitleSchema>;
+
+export const messageSchema = z.object({
+  role: z.enum(["user", "assistant", "system"]),
+  content: z.string().min(1, "Content is required"),
+});
+
+export type MessageFormData = z.infer<typeof messageSchema>;

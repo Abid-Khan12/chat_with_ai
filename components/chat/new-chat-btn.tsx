@@ -71,8 +71,8 @@ const NewChatButton = () => {
     conversationTitleFormData,
     MutationError
   >({
-    api_key: ["newChat_mutation"],
-    api_url: "/api/conversation",
+    api_key: ["new_chat_mutation"],
+    api_url: "/api/chat",
   });
 
   const { control, reset, handleSubmit } = useForm<conversationTitleFormData>({
@@ -110,6 +110,7 @@ const NewChatButton = () => {
             localStorage.setItem("resetAt", JSON.stringify(data?.data.resetAt));
             setResetAt(data.data.resetAt);
             setShowModal(false);
+            reset();
           }
 
           toast.error(message, { duration: 2000 });
@@ -135,7 +136,7 @@ const NewChatButton = () => {
       </SidebarMenu>
       {/* Form Dialog */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className={`md:min-w-2xl z-99999`}>
+        <DialogContent className={`max-w-2xl!`}>
           <DialogHeader>
             <DialogTitle className={`text-2xl font-semibold`}>
               Start New Chat
@@ -156,13 +157,13 @@ const NewChatButton = () => {
                 label="Title"
                 maxLength={90}
               />
-              <Field className="mt-4 sm:flex-row items-center gap-y-5">
-                <div className="flex sm:flex-row flex-col-reverse sm:justify-end items-center gap-4">
+              <Field className="mt-4 md:flex-row items-center gap-y-5">
+                <div className="flex md:flex-row flex-col-reverse md:justify-end items-center gap-4">
                   <Button
                     type="button"
                     variant={"outline"}
                     size={"lg"}
-                    className={"sm:w-fit! w-full"}
+                    className={"md:w-fit! w-full"}
                     render={
                       <DialogClose disabled={isPending}>Close</DialogClose>
                     }
@@ -170,7 +171,7 @@ const NewChatButton = () => {
                   <Button
                     disabled={isPending || isLimitReached}
                     type="submit"
-                    className={`sm:w-fit! w-full`}
+                    className={`md:w-fit! w-full`}
                     size={"lg"}
                   >
                     {isLimitReached ? "Limit Reached" : "Create Chat"}

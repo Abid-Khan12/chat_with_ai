@@ -2,7 +2,7 @@ import { MessageSquare, Sparkles, Zap } from "lucide-react";
 
 const ChatPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-8 px-4">
+    <div className="flex flex-col items-center justify-center h-full gap-8">
       <div className="flex flex-col items-center gap-4 max-w-2xl text-center">
         <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center">
           <MessageSquare className="size-8 text-primary" />

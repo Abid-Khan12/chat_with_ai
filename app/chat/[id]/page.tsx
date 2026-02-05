@@ -1,116 +1,53 @@
 "use client";
 
-import {
-  PromptInput,
-  PromptInputActionAddAttachments,
-  PromptInputActionMenu,
-  PromptInputActionMenuContent,
-  PromptInputActionMenuTrigger,
-  PromptInputBody,
-  type PromptInputMessage,
-  PromptInputSubmit,
-  PromptInputTextarea,
-  PromptInputFooter,
-  PromptInputTools,
-} from "@/components/ai-elements/prompt-input";
-import { useState } from "react";
-import { useChat } from "@ai-sdk/react";
-import {
-  Conversation,
-  ConversationContent,
-  ConversationScrollButton,
-} from "@/components/ai-elements/conversation";
-import {
-  Message,
-  MessageContent,
-  MessageResponse,
-} from "@/components/ai-elements/message";
-
 import useFetch from "@/hooks/use-fetch";
 
 import { useParams } from "next/navigation";
+import ChatWindow from "@/components/chat/chat-window";
+import { useEffect, useState } from "react";
+import { UIMessage } from "ai";
 
 interface FetchResponse {
   data: {
-    role: "user" | "assistant" | "system";
-    content: string;
+    messages: { role: "user" | "assistant" | "system"; content: string }[];
   };
 }
-
-const ConversationPage = () => {
+const ChatPage = () => {
   const { id } = useParams<{ id: string }>();
+  const [initailsMessage, setInitailsMessage] = useState<UIMessage[]>([]);
 
   const { data, isLoading } = useFetch<FetchResponse>({
-    api_key: ["user_single_chat_fetch"],
-    api_url: `/api/conversation/${id}`,
+    api_key: ["user_single_chat_fetch", id],
+    api_url: `/api/chat/${id}`,
   });
 
-  const [text, setText] = useState<string>("");
-  const { messages, status, sendMessage } = useChat({});
-  const handleSubmit = (message: PromptInputMessage) => {
-    const hasText = Boolean(message.text);
-    if (!hasText) {
-      return;
+  useEffect(() => {
+    if (!isLoading) {
+      const messages: UIMessage[] =
+        data?.data.messages.map((item, i) => {
+          return {
+            id: `${i}-${item.role}`,
+            role: item.role,
+            parts: [
+              {
+                type: "text",
+                text: item.content,
+              },
+            ],
+          };
+        }) || [];
+      setInitailsMessage(messages);
     }
-    sendMessage({
-      text: message.text,
-    });
-    setText("");
-  };
-
+  }, [data, isLoading]);
   return (
-    <div className="relative size-full">
-      <div className="flex flex-col h-full">
-        <Conversation>
-          <ConversationContent>
-            {messages.map((message) => (
-              <Message from={message.role} key={message.id}>
-                <MessageContent>
-                  {message.parts.map((part, i) => {
-                    switch (part.type) {
-                      case "text":
-                        return (
-                          <MessageResponse key={`${message.id}-${i}`}>
-                            {part.text}
-                          </MessageResponse>
-                        );
-                      default:
-                        return null;
-                    }
-                  })}
-                </MessageContent>
-              </Message>
-            ))}
-          </ConversationContent>
-          <ConversationScrollButton />
-        </Conversation>
-        <PromptInput
-          onSubmit={handleSubmit}
-          className="mt-4"
-          globalDrop
-          multiple
-        >
-          <PromptInputBody>
-            <PromptInputTextarea
-              onChange={(e) => setText(e.target.value)}
-              value={text}
-            />
-          </PromptInputBody>
-          <PromptInputFooter>
-            <PromptInputTools>
-              <PromptInputActionMenu>
-                <PromptInputActionMenuTrigger />
-                <PromptInputActionMenuContent>
-                  <PromptInputActionAddAttachments />
-                </PromptInputActionMenuContent>
-              </PromptInputActionMenu>
-            </PromptInputTools>
-            <PromptInputSubmit disabled={!text && !status} status={status} />
-          </PromptInputFooter>
-        </PromptInput>
-      </div>
+    <div className="h-full w-full">
+      <ChatWindow
+        id={id}
+        initailMessages={initailsMessage}
+        isLoading={isLoading}
+      />
     </div>
   );
 };
 
-export default ConversationPage;
+export default ChatPage;

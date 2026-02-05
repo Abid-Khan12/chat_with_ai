@@ -1,4 +1,4 @@
-import { Schema, models, model, InferSchemaType } from "mongoose";
+import { Schema, models, model, InferSchemaType, Document } from "mongoose";
 
 const messageSchema = new Schema(
   {

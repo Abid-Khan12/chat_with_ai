@@ -1,22 +1,22 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "../ui/sidebar";
 import { useRouter } from "next/navigation";
 
-const ConversationItem = ({
-  title,
-  id,
-  isCollapsed,
-}: {
-  id: string;
-  title: string;
-  isCollapsed: boolean;
-}) => {
+const ConversationItem = ({ title, id }: { id: string; title: string }) => {
+  const { toggleSidebar, isMobile } = useSidebar();
   const router = useRouter();
   const handleClick = () => {
     router.replace(`/chat/${id}`);
+    if (isMobile) {
+      toggleSidebar();
+    }
   };
   return (
     <SidebarMenu>

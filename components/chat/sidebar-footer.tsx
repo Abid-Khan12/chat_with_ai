@@ -55,7 +55,9 @@ export function NavUser({
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{name}</span>
+                  <span className="truncate font-medium capitalize">
+                    {name}
+                  </span>
                   <span className="truncate text-xs">{email}</span>
                 </div>
                 <ChevronsUpDown className="ml-auto size-4" />
@@ -79,7 +81,9 @@ export function NavUser({
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{name}</span>
+                    <span className="truncate font-medium capitalize">
+                      {name}
+                    </span>
                     <span className="truncate text-xs">{email}</span>
                   </div>
                 </div>
@@ -104,10 +108,7 @@ export function NavUser({
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() => signOut()}
-            >
+            <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
               <LogOut />
               Log out
             </DropdownMenuItem>

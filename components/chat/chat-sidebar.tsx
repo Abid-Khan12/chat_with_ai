@@ -19,7 +19,7 @@ import {
 import { Skeleton } from "../ui/skeleton";
 import { NavUser } from "./sidebar-footer";
 import { Button } from "../ui/button";
-import { ArrowLeft, ChevronDown, SidebarIcon } from "lucide-react";
+import { ArrowLeft, ChevronDown, HomeIcon, SidebarIcon } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -31,6 +31,7 @@ import Link from "next/link";
 import ConversationItem from "./conversation-item";
 import NewChatButton from "./new-chat-btn";
 import useFetch from "@/hooks/use-fetch";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface FetchResponse {
   data: {
@@ -46,28 +47,35 @@ const ChatSidebar = () => {
 
   const { data, isLoading } = useFetch<FetchResponse>({
     api_key: ["user_chats_fetch"],
-    api_url: "/api/conversation",
+    api_url: "/api/chat",
   });
 
   return (
-    <Sidebar collapsible="icon" variant="sidebar">
+    <Sidebar collapsible="icon">
       <SidebarHeader className="space-y-2">
-        <SidebarMenu className="flex-row justify-between">
+        <SidebarMenu className="md:flex-row flex-row-reverse justify-between items-center">
           {!isCollapsed && (
-            <Button
-              size={"icon"}
-              nativeButton={false}
-              variant={"ghost"}
-              className={"size-9"}
-              render={
-                <Link href={"/"}>
-                  <ArrowLeft />
-                </Link>
-              }
-            />
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    size={"icon"}
+                    nativeButton={false}
+                    variant={"ghost"}
+                    className={"size-9"}
+                    render={
+                      <Link href={"/"}>
+                        <HomeIcon />
+                      </Link>
+                    }
+                  />
+                }
+              />
+              <TooltipContent side="right">Back Home</TooltipContent>
+            </Tooltip>
           )}
 
-          <SidebarMenuItem className="self-end">
+          <SidebarMenuItem>
             <SidebarTrigger
               className={"h-9 w-9 rounded-lg "}
               render={
@@ -114,7 +122,7 @@ const ChatSidebar = () => {
                           <ConversationItem
                             id={item._id}
                             title={item.title}
-                            isCollapsed={isCollapsed}
+                            
                             key={item.title}
                           />
                         ))}

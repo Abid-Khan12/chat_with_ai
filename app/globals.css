@@ -199,6 +199,7 @@
   }
 
   .page {
-    @apply min-h-[calc(100vh-4rem)] w-full
+    @apply min-h-[calc(100svh-4rem)] w-full
   }
+
 }

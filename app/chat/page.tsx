@@ -2,17 +2,17 @@ import { MessageSquare, Sparkles, Zap } from "lucide-react";
 
 const ChatPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full md:gap-8 gap-3 lg:px-7 px-4">
-      <div className="flex flex-col items-center gap-4 max-w-2xl text-center">
-        <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center">
-          <MessageSquare className="size-8 text-primary" />
+    <div className="min-h-svh flex flex-col items-center justify-center md:gap-8 gap-3 lg:px-7 px-4 pt-10">
+      <div className="flex flex-col items-center md:gap-4 gap-2 max-w-2xl text-center">
+        <div className="md:size-16 size-12.5 rounded-full bg-primary/10 flex items-center justify-center">
+          <MessageSquare className="md:size-8 size-7 text-primary" />
         </div>
 
-        <h1 className="md:text-3xl text-2xl font-bold tracking-tight">
+        <h1 className="md:text-3xl text-xl font-bold tracking-tight">
           Welcome to Chat_With_AI
         </h1>
 
-        <p className="text-muted-foreground md:text-lg">
+        <p className="text-muted-foreground md:text-lg text-sm">
           Start a new conversation to get assistance with anything you need
         </p>
       </div>

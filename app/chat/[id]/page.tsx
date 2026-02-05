@@ -40,13 +40,11 @@ const ChatPage = () => {
     }
   }, [data, isLoading]);
   return (
-    <div className="h-full w-full">
-      <ChatWindow
-        id={id}
-        initailMessages={initailsMessage}
-        isLoading={isLoading}
-      />
-    </div>
+    <ChatWindow
+      id={id}
+      initailMessages={initailsMessage}
+      isLoading={isLoading}
+    />
   );
 };
 

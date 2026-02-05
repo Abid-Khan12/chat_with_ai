@@ -25,7 +25,7 @@ import { DefaultChatTransport, UIMessage } from "ai";
 import { toast } from "sonner";
 import { MessageFormData } from "@/schemas/schema";
 import useCustomMutation from "@/hooks/use-mutation";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
 
 interface MutationResponse {
@@ -133,24 +133,21 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
   };
 
   return (
-    <div className="h-full w-full relative max-w-4xl mx-auto lg:px-7 px-3">
-      <div className="h-full">
-        <ScrollArea className={`h-[80%]`}>
-          <Conversation>
-            <ConversationContent>
+    <div className="w-full h-svh max-w-4xl flex items-center justify-center pb-3 px-3 md:pt-0 pt-12">
+      <div className="flex flex-col relative w-full h-full gap-3">
+        <div className="flex-1 min-h-0 w-full">
+          <Conversation className="relative w-full h-full">
+            
+            <ConversationContent className="px-1! pe-3!">
               {isLoading ? (
                 <div className="space-y-6">
                   {/* user */}
-                  <div className="flex items-start gap-3 justify-end">
-                    <div className="max-w-[70%] w-full flex justify-end">
-                      <Skeleton className="h-6 min-w-60" />
-                    </div>
+                  <div className="flex items-start justify-end">
+                    <Skeleton className="h-6 w-full max-w-60" />
                   </div>
                   {/* assistant */}
                   <div className="flex items-start gap-3">
-                    <div className="max-w-[70%] w-full">
-                      <Skeleton className="h-20 min-w-100" />
-                    </div>
+                    <Skeleton className="h-20 w-full max-w-100" />
                   </div>
                 </div>
               ) : (
@@ -166,7 +163,7 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
                       <Message
                         from={message.role}
                         key={message.id}
-                        className="overflow-y-visible!"
+                        className="max-[426px]:px-0!"
                       >
                         <MessageContent>
                           {message.parts.map((part, i) => {
@@ -190,21 +187,21 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
             </ConversationContent>
             <ConversationScrollButton />
           </Conversation>
-        </ScrollArea>
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60 lg:px-7 px-3">
-        <PromptInput onSubmit={handleSubmit} multiple>
-          <PromptInputBody>
-            <PromptInputTextarea
-              onChange={(e) => setText(e.target.value)}
-              value={text}
-            />
-          </PromptInputBody>
+        </div>
 
-          <PromptInputFooter className="justify-end">
-            <PromptInputSubmit disabled={!text && !status} status={status} />
-          </PromptInputFooter>
-        </PromptInput>
+        <div>
+          <PromptInput onSubmit={handleSubmit} multiple>
+            <PromptInputBody>
+              <PromptInputTextarea
+                onChange={(e) => setText(e.target.value)}
+                value={text}
+              />
+            </PromptInputBody>
+            <PromptInputFooter className="justify-end">
+              <PromptInputSubmit disabled={!text && !status} status={status} />
+            </PromptInputFooter>
+          </PromptInput>
+        </div>
       </div>
     </div>
   );

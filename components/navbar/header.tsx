@@ -71,6 +71,12 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-3">
+          <Button
+            nativeButton={false}
+            className={`md:hidden inline-flex`}
+            size={"sm"}
+            render={<Link href={"/chat"}>Get started</Link>}
+          />
           <MobileNav />
           {status == "loading" ? (
             <Skeleton className="size-8 rounded-full" />

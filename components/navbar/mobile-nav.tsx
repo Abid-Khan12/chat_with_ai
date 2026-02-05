@@ -75,7 +75,7 @@ export function MobileNav() {
                   </Link>
                 ))}
               </div>
-              <div className="mt-4 flex flex-col gap-2">
+              {/* <div className="mt-4 flex flex-col gap-2">
                 {userData ? (
                   <Button
                     nativeButton={false}
@@ -89,7 +89,7 @@ export function MobileNav() {
                     onClick={() => setOpen(false)}
                   />
                 )}
-              </div>
+              </div> */}
             </div>
           </div>,
           document.body,

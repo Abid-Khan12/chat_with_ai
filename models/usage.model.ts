@@ -7,12 +7,14 @@ const usageSchema = new Schema({
     required: true,
   },
   chatUsage: {
-    type: Number,
-    default: 0,
-  },
-  resetAt: {
-    type: Date,
-    default: null,
+    usage: {
+      type: Number,
+      default: 0,
+    },
+    resetAt: {
+      type: Date,
+      default: null,
+    },
   },
 });
 

@@ -202,4 +202,31 @@
     @apply min-h-[calc(100svh-4rem)] w-full
   }
 
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    /* For horizontal scroll */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    /* Uses the 'muted' variable for a subtle look */
+    background: var(--muted-foreground);
+    /* Creates the "floating" effect with a border same as background */
+    border: 3px solid var(--background);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    /* Brightens slightly on hover using the primary or accent color */
+    background: var(--accent-foreground);
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted-foreground) transparent;
 }

@@ -101,7 +101,7 @@ const ChatSidebar = () => {
               render={
                 <CollapsibleTrigger className={`w-fit`}>
                   Recent Chats
-                  <ChevronDown className="transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                  <ChevronDown className="ml-auto transition-transform duration-200 data-[state=open]:rotate-180" />
                 </CollapsibleTrigger>
               }
             ></SidebarGroupLabel>
@@ -122,7 +122,6 @@ const ChatSidebar = () => {
                           <ConversationItem
                             id={item._id}
                             title={item.title}
-                            
                             key={item.title}
                           />
                         ))}

@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
 
-    const CHAT_LIMIT = 3;
+    const CHAT_LIMIT = 2;
     const RESET_DAYS = 1;
 
     // Get or create user usage
@@ -89,14 +89,17 @@ export async function POST(req: NextRequest) {
 
       userUsage = await UsageModel.create({
         userId: session.user.id,
-        chatUsage: 0,
-        resetAt: resetDate,
+        chatUsage: {
+          resetAt: resetDate,
+        },
       });
     }
 
     // Check if we need to reset usage
     const now = new Date();
-    const shouldReset = userUsage!.resetAt && now >= new Date(userUsage!.resetAt);
+    const shouldReset =
+      userUsage!.chatUsage!.resetAt &&
+      now >= new Date(userUsage!.chatUsage!.resetAt);
 
     if (shouldReset) {
       // Reset usage and set next reset date
@@ -106,23 +109,25 @@ export async function POST(req: NextRequest) {
       userUsage = await UsageModel.findOneAndUpdate(
         { userId: session.user.id },
         {
-          chatUsage: 0,
-          resetAt: nextResetDate,
+          $set: {
+            "chatUsage.usage": 0,
+            "chatUsage.resetAt": nextResetDate,
+          },
         },
         { new: true },
       );
     }
 
     // Check if user has reached the limit
-    if (userUsage!.chatUsage >= CHAT_LIMIT) {
+    if (userUsage!.chatUsage?.usage! >= CHAT_LIMIT) {
       return NextResponse.json(
         {
           status: 403,
-          message: `Chat limit reached. You can create up to ${CHAT_LIMIT} conversations. Resets on ${new Date(userUsage!.resetAt!).toLocaleDateString()}.`,
+          message: `Chat limit reached. You can create up to ${CHAT_LIMIT} conversations. Resets on ${new Date(userUsage!.chatUsage!.resetAt!).toLocaleDateString()}.`,
           data: {
-            chatUsage: userUsage!.chatUsage,
+            chatUsage: userUsage!.chatUsage?.usage,
             chatLimit: CHAT_LIMIT,
-            resetAt: userUsage!.resetAt,
+            resetAt: userUsage!.chatUsage!.resetAt,
           },
         },
         { status: 403 },
@@ -136,9 +141,9 @@ export async function POST(req: NextRequest) {
     });
 
     // Increment chat usage
-    const updatedUsage = await UsageModel.findOneAndUpdate(
+    const updatedUsage = await UsageModel.findOneAndUpdate<TUsage>(
       { userId: session.user.id },
-      { $inc: { chatUsage: 1 } },
+      { $inc: { "chatUsage.usage": 1 } },
       { new: true },
     );
 
@@ -152,9 +157,9 @@ export async function POST(req: NextRequest) {
             title: conversation.title,
           },
           usage: {
-            chatUsage: updatedUsage!.chatUsage,
+            chatUsage: updatedUsage!.chatUsage!.usage,
             chatLimit: CHAT_LIMIT,
-            resetAt: updatedUsage!.resetAt,
+            resetAt: updatedUsage!.chatUsage!?.resetAt,
           },
         },
       },

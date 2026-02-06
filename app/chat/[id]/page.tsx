@@ -2,10 +2,11 @@
 
 import useFetch from "@/hooks/use-fetch";
 
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import ChatWindow from "@/components/chat/chat-window";
 import { useEffect, useState } from "react";
 import { UIMessage } from "ai";
+import { toast } from "sonner";
 
 interface FetchResponse {
   data: {
@@ -16,13 +17,18 @@ const ChatPage = () => {
   const { id } = useParams<{ id: string }>();
   const [initailsMessage, setInitailsMessage] = useState<UIMessage[]>([]);
 
-  const { data, isLoading } = useFetch<FetchResponse>({
+  const { data, isLoading, isError, error } = useFetch<FetchResponse>({
     api_key: ["user_single_chat_fetch", id],
     api_url: `/api/chat/${id}`,
   });
 
   useEffect(() => {
     if (!isLoading) {
+      if (isError) {
+        toast.error(error?.message);
+        redirect("/chat");
+        return;
+      }
       const messages: UIMessage[] =
         data?.data.messages.map((item, i) => {
           return {
@@ -38,7 +44,7 @@ const ChatPage = () => {
         }) || [];
       setInitailsMessage(messages);
     }
-  }, [data, isLoading]);
+  }, [data, isLoading, isError]);
   return (
     <ChatWindow
       id={id}

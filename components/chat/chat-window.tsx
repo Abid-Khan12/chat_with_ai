@@ -97,12 +97,6 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
     },
   });
 
-  useEffect(() => {
-    if (!isLoading) {
-      setMessages(initailMessages);
-    }
-  }, [initailMessages, isLoading]);
-
   const handleSubmit = (message: PromptInputMessage) => {
     const hasText = Boolean(message.text);
     if (!hasText) {
@@ -126,19 +120,24 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
           setText("");
         },
         onError: ({ message: errorMsg }) => {
-          toast.error(`Failed to save message: ${errorMsg}`);
+          toast.error(errorMsg);
         },
       },
     );
   };
 
+  useEffect(() => {
+    if (!isLoading) {
+      setMessages(initailMessages);
+    }
+  }, [initailMessages, isLoading]);
+
   return (
-    <div className="w-full h-svh max-w-4xl flex items-center justify-center pb-3 px-3 md:pt-0 pt-12">
+    <div className="w-full h-svh max-w-5xl flex items-center justify-center pb-3 px-3 md:pt-0 pt-12">
       <div className="flex flex-col relative w-full h-full gap-3">
         <div className="flex-1 min-h-0 w-full">
-          <Conversation className="relative w-full h-full">
-            
-            <ConversationContent className="px-1! pe-3!">
+          <Conversation className="relative w-full h-full ">
+            <ConversationContent className="px-1! pe-3! h-full w-full">
               {isLoading ? (
                 <div className="space-y-6">
                   {/* user */}
@@ -154,7 +153,7 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
                 <>
                   {!isLoading && messages.length === 0 ? (
                     <ConversationEmptyState
-                      className="w-full flex items-center justify-center"
+                      className="h-full w-full flex items-center justify-center"
                       title="Start a conversation"
                       description="Ask anything. Get instant answers, ideas, and help."
                     />
@@ -163,7 +162,7 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
                       <Message
                         from={message.role}
                         key={message.id}
-                        className="max-[426px]:px-0!"
+                        className="max-[426px]:px-0! pb-2"
                       >
                         <MessageContent>
                           {message.parts.map((part, i) => {

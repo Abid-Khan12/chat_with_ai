@@ -6,6 +6,7 @@ import { Header } from "@/components/navbar/header";
 import NextAuthProvider from "@/providers/nextauth-provider";
 import { AppContextProvider } from "@/context/app-context";
 import ReactQueryProvider from "@/providers/query-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -32,11 +33,20 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <NextAuthProvider>
           <AppContextProvider>
-            <ReactQueryProvider>{children}</ReactQueryProvider>
+            <ReactQueryProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+            </ReactQueryProvider>
           </AppContextProvider>
         </NextAuthProvider>
         <Toaster

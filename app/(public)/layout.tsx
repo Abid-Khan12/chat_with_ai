@@ -3,9 +3,11 @@ import { PrimaryChildrenProp } from "@/types/types";
 
 const PublicLayout = ({ children }: PrimaryChildrenProp) => {
   return (
-    <div className="w-full max-w-5xl mx-auto h-full px-2">
+    <div>
       <Header />
-      <main>{children}</main>
+      <div className="w-full max-w-5xl mx-auto h-full px-2">
+        {children}
+      </div>
     </div>
   );
 };

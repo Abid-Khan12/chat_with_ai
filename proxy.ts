@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const AUTH_ROUTES = ["/auth/login", "/auth/sign-up"];
 
-const PROTECTED_ROUTES = ["/chat"];
+const PROTECTED_ROUTES = ["/chat", "/personalization"];
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;

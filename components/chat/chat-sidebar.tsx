@@ -42,7 +42,7 @@ interface FetchResponse {
 
 const ChatSidebar = () => {
   const { status, userData } = useAppContext();
-  const { state, toggleSidebar } = useSidebar();
+  const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
   const { data, isLoading } = useFetch<FetchResponse>({
@@ -51,7 +51,7 @@ const ChatSidebar = () => {
   });
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" suppressHydrationWarning>
       <SidebarHeader className="space-y-2">
         <SidebarMenu className="md:flex-row flex-row-reverse justify-between items-center">
           {!isCollapsed && (

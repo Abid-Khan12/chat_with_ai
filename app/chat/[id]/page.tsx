@@ -26,8 +26,9 @@ const ChatPage = () => {
     if (!isLoading) {
       if (isError) {
         toast.error(error?.message);
-        redirect("/chat");
-        return;
+        if (error.message == "Conversation not found") {
+          redirect("/chat");
+        }
       }
       const messages: UIMessage[] =
         data?.data.messages.map((item, i) => {

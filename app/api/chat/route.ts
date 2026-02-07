@@ -2,7 +2,6 @@ import authOptions from "@/lib/auth";
 import connectDB from "@/lib/db";
 import ConversationModel, { TConversation } from "@/models/conversation.model";
 import UsageModel, { TUsage } from "@/models/usage.model";
-import UserModel from "@/models/user.model";
 import { conversationTitleSchema } from "@/schemas/schema";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";

@@ -22,6 +22,7 @@
   },
   "registries": {
     "@efferd": "https://efferd.com/r/{name}.json",
-    "@ai-elements": "https://ai-sdk.dev/elements/api/registry/{name}.json"
+    "@ai-elements": "https://ai-sdk.dev/elements/api/registry/{name}.json",
+    "@tailark": "https://tailark.com/r/{name}.json"
   }
 }

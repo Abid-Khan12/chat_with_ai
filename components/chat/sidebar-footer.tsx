@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
-
+import { ChevronsUpDown, LogOut, Settings2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -26,6 +18,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { signOut } from "next-auth/react";
+
+import Link from "next/link";
 
 export function NavUser({
   name,
@@ -92,18 +86,14 @@ export function NavUser({
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup className={"space-y-1.5"}>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
+              <DropdownMenuItem
+                render={
+                  <Link href={"/personalization"}>
+                    <Settings2 />
+                    Personalization
+                  </Link>
+                }
+              />
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />

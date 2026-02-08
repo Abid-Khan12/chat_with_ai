@@ -25,13 +25,13 @@ const transitionVariants = {
 
 export default function HeroSection() {
   return (
-    <section className="relative lg:pt-32">
+    <section className="relative pt-32">
       <div className="text-center">
         <TextEffect
           preset="fade-in-blur"
           speedSegment={0.3}
           as="h1"
-          className="text-balance text-5xl max-md:font-semibold md:text-7xl xl:text-[5.25rem]"
+          className="text-balance text-4xl max-md:font-semibold md:text-6xl lg:text-7xl xl:text-[5.25rem]"
         >
           Smarter Conversations Start Here
         </TextEffect>
@@ -41,7 +41,7 @@ export default function HeroSection() {
           speedSegment={0.3}
           delay={0.5}
           as="p"
-          className="mx-auto mt-7 max-w-2xl text-balance text-lg"
+          className="mx-auto mt-7 max-w-2xl text-balance md:text-lg"
         >
           No fluff. Just a powerful, intuitive AI interface designed to give you
           the answers you need, exactly when you need them.

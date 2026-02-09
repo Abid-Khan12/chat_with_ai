@@ -8,9 +8,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface IAppContext {
   status: "loading" | "authenticated" | "unauthenticated";
   userData: Session["user"] | null;
-  updateSession: (val: Session["user"]) => void;
+  updateSession: (data?: any) => Promise<Session | null>;
   resetAt: Date | null;
   setResetAt: (val: Date | null) => void;
+  retryAfter: number | null;
+  setRetryAfter: (val: number | null) => void;
 }
 
 const AppContext = createContext<IAppContext | null>(null);
@@ -19,6 +21,7 @@ export const AppContextProvider = ({ children }: PrimaryChildrenProp) => {
   const { data, status, update: updateSession } = useSession();
   const userData = data?.user ?? null;
   const [resetAt, setResetAt] = useState<Date | null>(null);
+  const [retryAfter, setRetryAfter] = useState<number | null>(null);
 
   useEffect(() => {
     const result = localStorage.getItem("resetAt");
@@ -29,13 +32,29 @@ export const AppContextProvider = ({ children }: PrimaryChildrenProp) => {
     }
 
     const parsed = JSON.parse(result);
+    const resetTime = new Date(parsed);
+    const now = new Date();
 
-    setResetAt(parsed);
+    // Check if the reset time has already passed
+    if (now >= resetTime) {
+      setResetAt(null);
+      localStorage.removeItem("resetAt");
+    } else {
+      setResetAt(resetTime);
+    }
   }, []);
 
   return (
     <AppContext.Provider
-      value={{ userData, status, updateSession, resetAt, setResetAt }}
+      value={{
+        userData,
+        status,
+        updateSession,
+        resetAt,
+        setResetAt,
+        retryAfter,
+        setRetryAfter,
+      }}
     >
       {children}
     </AppContext.Provider>

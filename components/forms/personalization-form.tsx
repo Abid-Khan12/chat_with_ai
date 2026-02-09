@@ -33,13 +33,8 @@ interface FetchResponse {
 }
 
 const PersonalizationForm = () => {
-  const { update: updateSession } = useSession();
+  const { userData, status, updateSession } = useAppContext();
   const [isPending, startTransition] = useTransition();
-
-  const { data, isLoading } = useFetch<FetchResponse>({
-    api_key: ["personalization_fetch"],
-    api_url: "/api/personalization",
-  });
 
   const { control, reset, handleSubmit } = useForm<PromptFormData>({
     resolver: zodResolver(promptSchema),
@@ -74,16 +69,14 @@ const PersonalizationForm = () => {
       await updateSession({
         prompt: data?.prompt,
       });
-      });
+    });
   };
 
   useEffect(() => {
-    if (!isLoading) {
-      reset({
-        personalizationPrompt: data?.data.prompt,
-      });
-    }
-  }, [data, isLoading]);
+    reset({
+      personalizationPrompt: userData?.prompt,
+    });
+  }, [userData]);
 
   return (
     <Card>
@@ -104,13 +97,13 @@ const PersonalizationForm = () => {
                   <FieldLabel htmlFor="prompt">Personalization</FieldLabel>
                   <FieldContent>
                     <Textarea
-                      disabled={isLoading}
+                      disabled={status === "loading"}
                       aria-invalid={fieldState.invalid}
                       id="prompt"
                       className="resize-none h-30"
                       placeholder={
-                        isLoading
-                          ? "fetching prompt..."
+                        status === "loading"
+                          ? "Getting prompt..."
                           : "Add your interests, goals, and preferences"
                       }
                       {...field}
@@ -127,7 +120,7 @@ const PersonalizationForm = () => {
             />
             <Field>
               <Button
-                disabled={isPending || isLoading}
+                disabled={isPending || status === "loading"}
                 type="submit"
                 size={"lg"}
               >

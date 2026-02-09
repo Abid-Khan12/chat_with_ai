@@ -28,6 +28,8 @@ import useCustomMutation from "@/hooks/use-mutation";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
 import { Spinner } from "../ui/spinner";
+import useAppContext from "@/context/app-context";
+import { formatRetryTime } from "@/lib/time-format";
 
 interface MutationResponse {
   data: {};
@@ -46,6 +48,7 @@ interface ChatWindowProps {
 }
 
 const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
+  const { retryAfter, setRetryAfter } = useAppContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
@@ -62,12 +65,13 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
     api_url: `/api/chat/${id}`,
   });
 
-  const { messages, status, sendMessage, setMessages } = useChat({
+  const { messages, status, sendMessage, setMessages, stop } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/ai/conversation",
     }),
     onFinish: ({ message, isError }) => {
       if (isError) {
+        stop();
         return;
       }
       const textPart = message.parts.find((p) => p.type === "text");
@@ -105,7 +109,20 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
     },
     onError: (error) => {
       console.error("AI Error", error);
-      toast.error(error.message);
+
+      const match = error.message.match(/Please retry in ([\d.]+)s/);
+      if (match) {
+        const seconds = parseFloat(match[1]);
+        setRetryAfter(seconds);
+        toast.error(
+          `AI Rate limit exceeded. Please wait ${formatRetryTime(seconds)}.`,
+          { duration: 2500 },
+        );
+        stop();
+      } else {
+        toast.error(error.message, { duration: 2500 });
+        stop();
+      }
     },
   });
 
@@ -272,7 +289,10 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
               />
             </PromptInputBody>
             <PromptInputFooter className="justify-end">
-              <PromptInputSubmit disabled={!text && !status} status={status} />
+              <PromptInputSubmit
+                disabled={(!text && !status) || !!retryAfter}
+                status={status}
+              />
             </PromptInputFooter>
           </PromptInput>
         </div>

@@ -14,8 +14,9 @@ You are a versatile, efficient assistant. Your goal is high information density 
    - If a one-sentence answer suffices, provide only that.
    - For coding: Provide the solution first, then brief explanations only if the logic is non-obvious.
    - For analysis: Use "Key Takeaways" instead of long paragraphs.
-4. **Safety**: Strictly adhere to safety guidelines without lengthy preambles.
-5. **Be concise**: If the user's request is simple, answer in one sentence. Do not repeat the user's    prompt. Do not use 'As an AI...' or other meta-talk.
+4. **Typos**: Auto-correct obvious typos. For unclear ones, ask briefly: "Did you mean X?"
+5. **Safety**: Strictly adhere to safety guidelines without lengthy preambles.
+6. **Be concise**: If the user's request is simple, answer in one sentence. Do not repeat the user's prompt. Do not use 'As an AI...' or other meta-talk.
 `;
 
 export async function POST(req: NextRequest) {

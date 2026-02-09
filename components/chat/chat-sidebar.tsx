@@ -51,103 +51,108 @@ const ChatSidebar = () => {
   });
 
   return (
-    <Sidebar collapsible="icon" suppressHydrationWarning>
-      <SidebarHeader className="space-y-2">
-        <SidebarMenu className="md:flex-row flex-row-reverse justify-between items-center">
-          {!isCollapsed && (
-            <Tooltip>
-              <TooltipTrigger
+    <>
+      <div className="border-b py-2 md:hidden bg-background fixed top-0 w-full px-3 z-50">
+        <SidebarTrigger />
+      </div>
+      <Sidebar collapsible="icon">
+        <SidebarHeader className="space-y-2">
+          <SidebarMenu className="md:flex-row flex-row-reverse justify-between items-center">
+            {!isCollapsed && (
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Button
+                      size={"icon"}
+                      nativeButton={false}
+                      variant={"ghost"}
+                      className={"size-9"}
+                      render={
+                        <Link href={"/"}>
+                          <HomeIcon />
+                        </Link>
+                      }
+                    />
+                  }
+                />
+                <TooltipContent side="right">Back Home</TooltipContent>
+              </Tooltip>
+            )}
+
+            <SidebarMenuItem>
+              <SidebarTrigger
+                className={"h-9 w-9 rounded-lg "}
                 render={
-                  <Button
-                    size={"icon"}
-                    nativeButton={false}
-                    variant={"ghost"}
-                    className={"size-9"}
-                    render={
-                      <Link href={"/"}>
-                        <HomeIcon />
-                      </Link>
-                    }
-                  />
+                  <SidebarMenuButton
+                    tooltip={"Toggle Sidebar"}
+                    className="flex items-center justify-center"
+                  >
+                    <SidebarIcon
+                      className={`${isCollapsed ? "rotate-180" : "rotate-0"} transition-transform duration-200`}
+                    />
+                  </SidebarMenuButton>
                 }
               />
-              <TooltipContent side="right">Back Home</TooltipContent>
-            </Tooltip>
-          )}
-
-          <SidebarMenuItem>
-            <SidebarTrigger
-              className={"h-9 w-9 rounded-lg "}
-              render={
-                <SidebarMenuButton
-                  tooltip={"Toggle Sidebar"}
-                  className="flex items-center justify-center"
-                >
-                  <SidebarIcon
-                    className={`${isCollapsed ? "rotate-180" : "rotate-0"} transition-transform duration-200`}
-                  />
-                </SidebarMenuButton>
-              }
+            </SidebarMenuItem>
+          </SidebarMenu>
+          <NewChatButton />
+        </SidebarHeader>
+        <SidebarSeparator className={`m-0`} />
+        <SidebarContent>
+          <Collapsible defaultOpen className="group/collapsible">
+            <SidebarGroup>
+              <SidebarGroupLabel
+                render={
+                  <CollapsibleTrigger className={`w-fit`}>
+                    Recent Chats
+                    <ChevronDown className="ml-auto transition-transform duration-200 data-[state=open]:rotate-180" />
+                  </CollapsibleTrigger>
+                }
+              ></SidebarGroupLabel>
+              <CollapsibleContent>
+                <SidebarGroupContent className="space-y-2">
+                  {isLoading ? (
+                    Array.from({ length: 6 }).map((_, i) => (
+                      <SidebarMenuSkeleton
+                        className="w-full"
+                        key={`skeleton-${i}`}
+                      />
+                    ))
+                  ) : (
+                    <>
+                      {data ? (
+                        <>
+                          {data.data.map((item) => (
+                            <ConversationItem
+                              id={item._id}
+                              title={item.title}
+                              key={item._id}
+                            />
+                          ))}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </>
+                  )}
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </SidebarGroup>
+          </Collapsible>
+        </SidebarContent>
+        <SidebarFooter>
+          {status === "loading" ? (
+            <Skeleton className="size-10 w-full" />
+          ) : (
+            <NavUser
+              name={userData?.name!}
+              email={userData?.email!}
+              avatar={userData?.image!}
             />
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <NewChatButton />
-      </SidebarHeader>
-      <SidebarSeparator className={`m-0`} />
-      <SidebarContent>
-        <Collapsible defaultOpen className="group/collapsible">
-          <SidebarGroup>
-            <SidebarGroupLabel
-              render={
-                <CollapsibleTrigger className={`w-fit`}>
-                  Recent Chats
-                  <ChevronDown className="ml-auto transition-transform duration-200 data-[state=open]:rotate-180" />
-                </CollapsibleTrigger>
-              }
-            ></SidebarGroupLabel>
-            <CollapsibleContent>
-              <SidebarGroupContent className="space-y-2">
-                {isLoading ? (
-                  Array.from({ length: 6 }).map((_, i) => (
-                    <SidebarMenuSkeleton
-                      className="w-full"
-                      key={`skeleton-${i}`}
-                    />
-                  ))
-                ) : (
-                  <>
-                    {data ? (
-                      <>
-                        {data.data.map((item) => (
-                          <ConversationItem
-                            id={item._id}
-                            title={item.title}
-                            key={item.title}
-                          />
-                        ))}
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                )}
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </SidebarGroup>
-        </Collapsible>
-      </SidebarContent>
-      <SidebarFooter>
-        {status === "loading" ? (
-          <Skeleton className="size-10 w-full" />
-        ) : (
-          <NavUser
-            name={userData?.name!}
-            email={userData?.email!}
-            avatar={userData?.image!}
-          />
-        )}
-      </SidebarFooter>
-    </Sidebar>
+          )}
+        </SidebarFooter>
+      </Sidebar>
+    </>
   );
 };
 

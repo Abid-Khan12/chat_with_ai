@@ -6,6 +6,7 @@ import Pricing from "@/components/tailark-elements/pricing";
 const HomePage = () => {
   return (
     <>
+      
       <main className="pb-10 flex flex-col md:gap-36 gap-18">
         <HeroSection />
         <Features />

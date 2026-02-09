@@ -38,3 +38,12 @@ export const messageSchema = z.object({
 });
 
 export type MessageFormData = z.infer<typeof messageSchema>;
+
+export const promptSchema = z.object({
+  personalizationPrompt: z
+    .string()
+    .min(1, "Prompt is required")
+    .max(300, "Maximum 300 characters"),
+});
+
+export type PromptFormData = z.infer<typeof promptSchema>;

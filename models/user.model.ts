@@ -24,6 +24,10 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    personalizationPrompt: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true },
 );

@@ -27,7 +27,7 @@ export default function Pricing() {
             <ul className="list-outside space-y-3 text-sm">
               {[
                 "2 AI Chat Sessions per day",
-                "10 Messages per chat session",
+                "8 Messages per chat session",
                 "Standard Response Speed",
                 "Access to Gemini AI Model",
               ].map((item, index) => (

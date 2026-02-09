@@ -64,7 +64,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const RESET_AT = 1;
-  const MESSAGE_LIMIT = 10;
+  const MESSAGE_LIMIT = 8;
 
   const session = await getServerSession(authOptions);
 

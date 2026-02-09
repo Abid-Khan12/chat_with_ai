@@ -56,6 +56,7 @@ const authOptions: NextAuthOptions = {
             email: user.email,
             name: user.userName,
             image: user.image_url,
+            prompt: user.personalizationPrompt,
           };
         } catch (error: any) {
           console.error("Login api error", error);
@@ -86,16 +87,23 @@ const authOptions: NextAuthOptions = {
         }
 
         user.id = exitUser?._id as string;
+        user.prompt = exitUser?.personalizationPrompt as string;
       }
       return true;
     },
-    jwt({ user, token }) {
+    jwt({ user, token, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
         token.image = user.image;
+        token.prompt = user.prompt;
       }
+
+      if (trigger === "update" && session.prompt !== "") {
+        token.prompt = session.prompt;
+      }
+
       return token;
     },
     session({ session, token }) {
@@ -104,7 +112,9 @@ const authOptions: NextAuthOptions = {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.image = token.image as string;
+        session.user.prompt = (token.prompt as string) || "";
       }
+
       return session;
     },
   },

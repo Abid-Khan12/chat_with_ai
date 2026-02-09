@@ -24,7 +24,10 @@ export async function POST(req: NextRequest) {
   if (!session || !session.user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
+
   try {
+    const personalization = session.user.prompt;
+
     const { messages }: { messages: UIMessage[] } = await req.json();
 
     if (!messages) {
@@ -36,7 +39,9 @@ export async function POST(req: NextRequest) {
 
     const result = streamText({
       model,
-      system: `${SYSTEM_INSTRUCTIONS} The current user is ${session.user.name || "a guest"}.`,
+      system: `${SYSTEM_INSTRUCTIONS} User name: ${session.user.name || "User"} 
+      User personalization:${personalization || "No personalization provided."}
+      Follow personalization strictly when generating responses.`,
       messages: await convertToModelMessages(messages),
       maxOutputTokens: 1500,
       temperature: 0.7,

@@ -8,6 +8,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface IAppContext {
   status: "loading" | "authenticated" | "unauthenticated";
   userData: Session["user"] | null;
+  updateSession: (val: Session["user"]) => void;
   resetAt: Date | null;
   setResetAt: (val: Date | null) => void;
 }
@@ -15,7 +16,7 @@ interface IAppContext {
 const AppContext = createContext<IAppContext | null>(null);
 
 export const AppContextProvider = ({ children }: PrimaryChildrenProp) => {
-  const { data, status } = useSession();
+  const { data, status, update: updateSession } = useSession();
   const userData = data?.user ?? null;
   const [resetAt, setResetAt] = useState<Date | null>(null);
 
@@ -33,7 +34,9 @@ export const AppContextProvider = ({ children }: PrimaryChildrenProp) => {
   }, []);
 
   return (
-    <AppContext.Provider value={{ userData, status, resetAt, setResetAt }}>
+    <AppContext.Provider
+      value={{ userData, status, updateSession, resetAt, setResetAt }}
+    >
       {children}
     </AppContext.Provider>
   );

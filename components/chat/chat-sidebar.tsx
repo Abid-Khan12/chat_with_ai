@@ -57,28 +57,7 @@ const ChatSidebar = () => {
       </div>
       <Sidebar collapsible="icon">
         <SidebarHeader className="space-y-2">
-          <SidebarMenu className="md:flex-row flex-row-reverse justify-between items-center">
-            {!isCollapsed && (
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      size={"icon"}
-                      nativeButton={false}
-                      variant={"ghost"}
-                      className={"size-9"}
-                      render={
-                        <Link href={"/"}>
-                          <HomeIcon />
-                        </Link>
-                      }
-                    />
-                  }
-                />
-                <TooltipContent side="right">Back Home</TooltipContent>
-              </Tooltip>
-            )}
-
+          <SidebarMenu className="items-end">
             <SidebarMenuItem>
               <SidebarTrigger
                 className={"h-9 w-9 rounded-lg "}

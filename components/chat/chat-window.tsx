@@ -24,12 +24,14 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, UIMessage } from "ai";
 import { toast } from "sonner";
 import { MessageFormData } from "@/schemas/schema";
-import useCustomMutation from "@/hooks/use-mutation";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { redirect } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
 import { Spinner } from "../ui/spinner";
-import useAppContext from "@/context/app-context";
 import { formatRetryTime } from "@/lib/time-format";
+
+import useCustomMutation from "@/hooks/use-mutation";
+import useFetch from "@/hooks/use-fetch";
+import useAppContext from "@/context/app-context";
 
 interface MutationResponse {
   data: {};
@@ -43,16 +45,26 @@ type MutationError = {
 
 interface ChatWindowProps {
   id: string;
-  initailMessages: UIMessage[];
-  isLoading: boolean;
 }
 
-const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
+interface FetchResponse {
+  data: {
+    messages: { role: "user" | "assistant" | "system"; content: string }[];
+  };
+}
+
+const ChatWindow = ({ id }: ChatWindowProps) => {
   const { retryAfter, setRetryAfter } = useAppContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
 
+  const { data, isLoading, isError, error } = useFetch<FetchResponse>({
+    api_key: ["user_single_chat_fetch", id],
+    api_url: `/api/chat/${id}`,
+  });
+
+  const [initailMessages, setInitailsMessage] = useState<UIMessage[]>([]);
   const [text, setText] = useState<string>("");
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
 
@@ -160,6 +172,31 @@ const ChatWindow = ({ id, initailMessages, isLoading }: ChatWindowProps) => {
       },
     );
   };
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (isError) {
+        toast.error(error?.message);
+        if (error.message == "Conversation not found") {
+          redirect("/chat");
+        }
+      }
+      const messages: UIMessage[] =
+        data?.data.messages.map((item, i) => {
+          return {
+            id: `${i}-${item.role}`,
+            role: item.role,
+            parts: [
+              {
+                type: "text",
+                text: item.content,
+              },
+            ],
+          };
+        }) || [];
+      setInitailsMessage(messages);
+    }
+  }, [data, isLoading, isError]);
 
   useEffect(() => {
     const el = containerRef.current;

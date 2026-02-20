@@ -25,30 +25,35 @@ AI-powered chat application built with Next.js (App Router), MongoDB, and Google
 
 <hr/>
 
-<h2>Features</h2>
+<h2>Package Manager</h2>
 
-<ul>
-  <li>Google OAuth authentication</li>
-  <li>User-based conversation history</li>
-  <li>Streaming AI responses</li>
-  <li>Markdown &amp; code rendering</li>
-  <li>Dark mode</li>
-  <li>Usage tracking</li>
-</ul>
+<p>
+This project is configured using <strong>pnpm</strong>.
+It includes a <code>pnpm-lock.yaml</code> file.
+</p>
+
+<p>
+⚠️ It is strongly recommended to use <strong>pnpm</strong> to avoid dependency resolution issues.
+</p>
+
+<h3>Install pnpm (if not installed)</h3>
+
+<pre><code>npm install -g pnpm
+</code></pre>
 
 <hr/>
 
-<h2>Getting Started</h2>
+<h2>Getting Started (Recommended - pnpm)</h2>
 
 <h3>1. Clone the repository</h3>
 
-<pre><code>git clone https://github.com/Abid-Khan12/chat_with_ai.git
+<pre><code>git clone https://github.com/yourusername/chat_with_ai.git
 cd chat_with_ai
 </code></pre>
 
 <h3>2. Install dependencies</h3>
 
-<pre><code>npm install
+<pre><code>pnpm install
 </code></pre>
 
 <h3>3. Create environment variables</h3>
@@ -64,6 +69,38 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 GEMINI_API_KEY=your_gemini_api_key
 </code></pre>
+
+<h3>4. Run development server</h3>
+
+<pre><code>pnpm dev
+</code></pre>
+
+<p>Open:</p>
+
+<pre><code>http://localhost:3000
+</code></pre>
+
+<hr/>
+
+<h2>Using npm Instead of pnpm</h2>
+
+<p>
+If you prefer using <strong>npm</strong>, follow these steps carefully:
+</p>
+
+<ol>
+  <li>Delete <code>pnpm-lock.yaml</code></li>
+  <li>Delete <code>node_modules</code> (if generated)</li>
+  <li>Run:</li>
+</ol>
+
+<pre><code>npm install
+npm run dev
+</code></pre>
+
+<p>
+Note: Since this project was developed using pnpm, dependency resolution may differ slightly when using npm.
+</p>
 
 <hr/>
 
@@ -95,39 +132,4 @@ GEMINI_API_KEY=your_gemini_api_key
 <ul>
   <li>Generate an API key from Google AI Studio</li>
   <li>Add it as <code>GEMINI_API_KEY</code></li>
-</ul>
-
-<hr/>
-
-<h2>Run Development Server</h2>
-
-<pre><code>npm run dev
-</code></pre>
-
-<p>Open:</p>
-
-<pre><code>http://localhost:3000
-</code></pre>
-
-<hr/>
-
-<h2>Database Models</h2>
-
-<ul>
-  <li>User</li>
-  <li>Conversation</li>
-  <li>Usage</li>
-</ul>
-
-<p>Each authenticated user has isolated conversation history stored in MongoDB.</p>
-
-<hr/>
-
-<h2>Notes</h2>
-
-<ul>
-  <li>Built using App Router</li>
-  <li>Uses both API Routes and Server Actions</li>
-  <li>Proxy protection enabled for secure requests</li>
-  <li>No conversation delete feature implemented</li>
 </ul>

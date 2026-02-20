@@ -42,7 +42,7 @@ AI-powered chat application built with Next.js (App Router), MongoDB, and Google
 
 <h3>1. Clone the repository</h3>
 
-<pre><code>git clone https://github.com/yourusername/chat_with_ai.git
+<pre><code>git clone https://github.com/Abid-Khan12/chat_with_ai.git
 cd chat_with_ai
 </code></pre>
 
